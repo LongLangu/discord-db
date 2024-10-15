@@ -1,0 +1,6 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: discord-db
+  labels:
+    name: discord-db
