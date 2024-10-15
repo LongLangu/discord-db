@@ -1,0 +1,21 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: postgresql-pv
+  namespace: discord-db
+spec:
+  storageClassName: postgresql-storage
+  capacity:
+    storage: 5Gi
+  accessModes:
+  - ReadWriteOnce
+  local:
+    path: /home/worker01/Mounts/data/postgresql
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - k8s-node01

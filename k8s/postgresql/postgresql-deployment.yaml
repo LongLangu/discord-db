@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discord-postgresql-deployment
+  namespace: discord-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discord-postgresql-pod
+  template:
+    metadata:
+      labels:
+        app: discord-postgresql-pod
+    spec:
+      containers:
+      - name: discord-postgresql-container
+        image: arm32v7/postgres:16.3-alpine3.19
+        env: 
+          - name: TZ
+            value: Asia/Tokyo
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secret
+                key: POSTGRES_USER
+                optional: false
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgresql-secret
+                key: POSTGRES_PASSWORD
+                optional: false
+          - name: POSTGRES_DB
+            value: discord-db
+        volumeMounts:
+          - name: storage
+            mountPath: /var/lib/postgresql/data
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "30m"
+          requests:
+            memory: "64Mi"
+            cpu: "10m"
+        ports:
+        - containerPort: 5432
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: postgresql-pvc
