@@ -7,4 +7,4 @@ RUN apk add --no-cache git build-base build-base postgresql-dev gcc g++ make && 
     make install && \
     cd .. && \
     rm -rf pgvector && \
-    apk del git build-base
+    apk del git build-base postgresql-dev gcc g++
